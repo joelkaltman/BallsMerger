@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9062106579564369165
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9062106579564369162}
+  - component: {fileID: 9062106579564369163}
+  - component: {fileID: 4063702636468653448}
+  m_Layer: 0
+  m_Name: GameData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9062106579564369162
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9062106579564369165}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 146.42688, y: 277.49384, z: -2.7228699}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9062106579564369163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9062106579564369165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10df0937be118614ab113eff0b44ff2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isOnline: 0
+  cap: {fileID: 1835289421287908, guid: a174305d909c17e4681eb34ff77ede93, type: 3}
+  guns:
+  - {fileID: 11400000, guid: 9bf4fd122bac2b84e9a4b2518be52275, type: 2}
+  - {fileID: 11400000, guid: 18c958996abc02f46b7d27e6675df692, type: 2}
+  - {fileID: 11400000, guid: 58488cc1fa85e3542b26025a7218e49c, type: 2}
+  - {fileID: 11400000, guid: f2f71c5475f631a45b6e28ffc768ab23, type: 2}
+  - {fileID: 11400000, guid: 8831532f83816254d91b5eb984d8c676, type: 2}
+  - {fileID: 11400000, guid: 4102dad137cebad4182405983fe90087, type: 2}
+  - {fileID: 11400000, guid: 62a8da9a5dfc1554587f2b74b9a5e562, type: 2}
+  - {fileID: 11400000, guid: af6096cd300b9d04d8a6b179d911fe26, type: 2}
+  - {fileID: 11400000, guid: 29873ae89dc53fe4c806d03a2369c2b4, type: 2}
+  - {fileID: 11400000, guid: d8b61cbe3a5c2d846a8331911838936f, type: 2}
+  - {fileID: 11400000, guid: cff51dc66adc1b940bcf80cff4aa4a9a, type: 2}
+  powerUps:
+  - {fileID: 1824854647180254, guid: 48f3c44c8752bc44287b761abaf56ae5, type: 3}
+  - {fileID: 1086103694319778, guid: 1a3cb5d72156b88419c784e2201ad889, type: 3}
+  - {fileID: 1802510494018256, guid: dae9943d4a4346744aac4780b96919a4, type: 3}
+--- !u!114 &4063702636468653448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9062106579564369165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 517c0afb405c9914ab2022da66cbb373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deeplinkURL: unitydl://mylink

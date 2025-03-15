@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "939379106710",
+    "firebase_url": "https://asgame-6af5c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "asgame-6af5c",
+    "storage_bucket": "asgame-6af5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939379106710:android:7b4e5e0eb129882bec73b7",
+        "android_client_info": {
+          "package_name": "com.BigBambu.AnotherShootingGame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClh7Zajpcr6ZNSERFxkElPhWzWzBVR1OI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
