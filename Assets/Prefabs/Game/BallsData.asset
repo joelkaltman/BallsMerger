@@ -14,24 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpawnIndex: 2
   Datas:
-  - size: 0.5
+  - index: 0
+    size: 0.5
     color: {r: 0.92549026, g: 0.16862746, b: 0.6039216, a: 1}
     score: 10
-  - size: 0.75
+  - index: 1
+    size: 0.75
     color: {r: 0.9254902, g: 0.16862741, b: 0.17619225, a: 0}
     score: 25
-  - size: 1
+  - index: 2
+    size: 1
     color: {r: 1, g: 0.7395936, b: 0.19215685, a: 0}
     score: 65
-  - size: 1.5
+  - index: 3
+    size: 1.5
     color: {r: 0.5990227, g: 1, b: 0.19215685, a: 0}
     score: 160
-  - size: 2
+  - index: 4
+    size: 2
     color: {r: 0.17007834, g: 0.9245283, b: 0.7520189, a: 0}
     score: 160
-  - size: 3
+  - index: 5
+    size: 3
     color: {r: 0.16862741, g: 0.34940708, b: 0.9254902, a: 0}
     score: 1000
-  - size: 4
+  - index: 6
+    size: 4
     color: {r: 0.5506721, g: 0.16862741, b: 0.9254902, a: 0}
     score: 2500

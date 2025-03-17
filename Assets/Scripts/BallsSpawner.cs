@@ -1,12 +1,18 @@
+using System.Collections.Generic;
+using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class BallsSpawner : MonoBehaviour
 {
     [SerializeField] private BallsDataScriptableObject ballsSpawnData;
     [SerializeField] private GameObject guide;
+    [SerializeField] private GameObject limit;
     [SerializeField] private GameObject ball;
 
-    private GameObject ballInstance;
+    private GameObject dropBall;
+
+    private List<CollisionData> collisions = new();
     
 #if UNITY_EDITOR
     private bool InputDown => Input.GetMouseButton(0);
@@ -23,34 +29,74 @@ public class BallsSpawner : MonoBehaviour
     public void Start()
     {
         initPos = guide.transform.position;
-        GenerateBall();
     }
 
     public void Update()
     {
-        if(InputReleased)
-            GenerateBall();
-        
+        if(dropBall == null || InputReleased)
+            CreateDropBall();
+
         guide.SetActive(InputDown);
-
-        var finalPos = initPos;
-        if (InputDown)
-        {
-            var inputWorldPos = Camera.main.ScreenToWorldPoint(InputPos);
-            finalPos = new Vector3(inputWorldPos.x, initPos.y, initPos.z);
-        }
-
+        
+        var inputWorldPos = Camera.main.ScreenToWorldPoint(InputPos);
+        var finalPos = new Vector3(inputWorldPos.x, initPos.y, initPos.z);
         guide.transform.position = finalPos;
-        ballInstance.transform.position = finalPos;
+        dropBall.transform.position = finalPos;
+
+        ProcessCollisions();
     }
 
-    private void GenerateBall()
+    private GameObject CreateBall(BallData data, Vector3 position)
     {
-        ballInstance = Instantiate(ball);
-        ballInstance.transform.position = initPos;
+        var instance = Instantiate(ball, transform);
+        instance.transform.position = position;
 
-        var spawnData = ballsSpawnData.GetRandomData();
-        ballInstance.transform.localScale = Vector3.one * spawnData.size;
-        ballInstance.GetComponent<SpriteRenderer>().color = new Color(spawnData.color.r, spawnData.color.g, spawnData.color.b, 1);
+        var ballCol = instance.GetComponent<BallCollision>();
+        ballCol.Init(data, limit.transform.position.y);
+        ballCol.OnCollision += StackCollision;
+        ballCol.OnOutOfBounds += EndGame;
+
+        return instance;
+    }
+
+    private void CreateDropBall()
+    {
+        var ballData = ballsSpawnData.GetRandomData();
+        dropBall = CreateBall(ballData, initPos);
+    }
+
+    private void StackCollision(CollisionData data)
+    {
+        if (data.ContainsAny(dropBall))
+            return;
+        
+        if(collisions.Any(x => x.ContainsAny(data.ball0, data.ball1)))
+            return;
+        
+        collisions.Add(data);
+    }
+
+    private void ProcessCollisions()
+    {
+        foreach (var collision in collisions)
+        {
+            var spawnPos = math.lerp(collision.ball0.transform.position, collision.ball1.transform.position, 0.5f);
+            
+            Destroy(collision.ball0);
+            Destroy(collision.ball1);
+            
+            var localStats = MultiplayerManager.Instance.GetLocalPlayerComponent<PlayerStats>();
+            localStats.Score.Value += collision.data.score;
+            
+            if(ballsSpawnData.GetNextBall(collision.data.index, out var ballData))
+                CreateBall(ballData, spawnPos);
+        }
+        collisions.Clear();
+    }
+
+    private void EndGame()
+    {
+        var localStats = MultiplayerManager.Instance.GetLocalPlayerComponent<PlayerStats>();
+        localStats.IsDead = true;
     }
 }

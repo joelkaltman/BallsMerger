@@ -29,7 +29,6 @@ public class GameplayUI : MonoBehaviour {
 
     [Header("UI")] 
     public GameObject topPanel;
-    public Transform locatorsContainer;
     public Text playerName;
 	public Text textScore;
 	public Text textGameOverReason;
@@ -77,9 +76,6 @@ public class GameplayUI : MonoBehaviour {
 		MultiplayerManager.Instance.OnRemotePlayerReady += OnRemotePlayerReady;
 		MultiplayerManager.Instance.OnGameReady += StartGame;
 		MultiplayerManager.Instance.OnGameOver += GameOver;
-
-		
-		TargetLocator.SetLocatorListener(OnLocatorSpawn);
 		
 		if (!GameData.Instance.isOnline)
 		{
@@ -151,11 +147,6 @@ public class GameplayUI : MonoBehaviour {
 	{
 		remoteUsername = username.ToString();
 		textRemoteUsername.text = remoteUsername;
-	}
-
-	private void OnLocatorSpawn(GameObject locator)
-	{
-		locator.transform.SetParent(locatorsContainer);
 	}
 	
 	private void ShowCanvas(PanelType type)
