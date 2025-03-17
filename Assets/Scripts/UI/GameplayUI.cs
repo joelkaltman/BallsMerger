@@ -242,14 +242,6 @@ public class GameplayUI : MonoBehaviour {
 		{
 		}
 		#endif
-
-		#if UNITY_STANDALONE
-		usedContinue = true;
-		playerStats.Revive ();
-		joystickMovement.GetComponentInChildren<Joystick> ().Reset ();
-		joystickRotation.GetComponentInChildren<Joystick> ().Reset ();
-		ShowCanvas (PanelType.GAME);
-		#endif
 	}
 
 	#if UNITY_ANDROID

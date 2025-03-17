@@ -11,7 +11,6 @@ public class BallsSpawner : MonoBehaviour
     [SerializeField] private GameObject ball;
 
     private GameObject dropBall;
-
     private List<CollisionData> collisions = new();
     
 #if UNITY_EDITOR
@@ -19,20 +18,33 @@ public class BallsSpawner : MonoBehaviour
     private bool InputReleased => Input.GetMouseButtonUp(0);
     private Vector3 InputPos => new (Input.mousePosition.x, Input.mousePosition.y, 10); 
 #else
-    private bool InputDown => Input.touchCount > 0 && (Input.GetTouch(0).phase == TouchPhase.Moved || Input.GetTouch(0).phase == TouchPhase.Moved);
-    private bool InputReleased => Input.touchCount == 0 || Input.GetTouch(0).phase == TouchPhase.Ended;
+    private bool InputDown => Input.GetTouch(0).phase == TouchPhase.Moved || Input.GetTouch(0).phase == TouchPhase.Moved;
+    private bool InputReleased => Input.GetTouch(0).phase == TouchPhase.Ended;
     private Vector3 InputPos => new (Input.GetTouch(0).position.x, Input.GetTouch(0).position.y, 10); 
 #endif
 
     private Vector3 initPos;
+    private Vector3 lastPos;
 
     public void Start()
     {
         initPos = guide.transform.position;
+        lastPos = initPos;
     }
 
     public void Update()
     {
+        ProcessCollisions();
+        
+#if !UNITY_EDITOR
+        if (Input.touchCount == 0)
+        {
+            guide.transform.position = lastPos;
+            dropBall.transform.position = lastPos;
+            return;
+        }
+#endif
+            
         if(dropBall == null || InputReleased)
             CreateDropBall();
 
@@ -42,8 +54,7 @@ public class BallsSpawner : MonoBehaviour
         var finalPos = new Vector3(inputWorldPos.x, initPos.y, initPos.z);
         guide.transform.position = finalPos;
         dropBall.transform.position = finalPos;
-
-        ProcessCollisions();
+        lastPos = finalPos;
     }
 
     private GameObject CreateBall(BallData data, Vector3 position)
