@@ -21,14 +21,11 @@ public struct CollisionData
 
 public class BallCollision : MonoBehaviour
 {
-    private BallData data;
-    private float topY;
-    private float timerLose;
-
     private const float INITIAL_TIMER = 10f;
 
     private SpriteRenderer renderer;
-
+    private Rigidbody2D rigidBody;
+    private Collider2D collider;
     private float Radius => data.size * 0.5f;
     
     private void ResetTimer() => timerLose = INITIAL_TIMER;
@@ -37,12 +34,22 @@ public class BallCollision : MonoBehaviour
     public event Action<CollisionData> OnCollision;
     public event Action OnOutOfBounds;
 
+    private BallData data;
+    private float topY;
+    private float timerLose;
+    private bool dropped;
+    
     public void Init(BallData data, float topY)
     {
         this.data = data;
         this.topY = topY;
 
         renderer = GetComponent<SpriteRenderer>();
+        rigidBody = GetComponent<Rigidbody2D>();
+        collider = GetComponent<Collider2D>();
+
+        rigidBody.bodyType = RigidbodyType2D.Static;
+        collider.enabled = false;
         
         transform.localScale = Vector3.one * data.size;
         
@@ -50,8 +57,19 @@ public class BallCollision : MonoBehaviour
         SetColor(data.color);
     }
 
+    public void Drop()
+    {
+        rigidBody.bodyType = RigidbodyType2D.Dynamic;
+        collider.enabled = true;
+        
+        dropped = true;
+    }
+
     private void Update()
     {
+        if (!dropped)
+            return;
+        
         if (timerLose <= 0)
             return;
         
@@ -77,6 +95,9 @@ public class BallCollision : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
+        if (!dropped)
+            return;
+        
         if (!other.gameObject.TryGetComponent(out BallCollision collision))
             return;
 

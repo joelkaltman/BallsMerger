@@ -30,7 +30,8 @@ public class GameplayUI : MonoBehaviour {
     [Header("UI")] 
     public GameObject topPanel;
     public Text playerName;
-	public Text textScore;
+    public Text textScore;
+    public Text textTime;
 	public Text textGameOverReason;
 	public Text textGiantScore;
 	public Text textJoinCode;
@@ -41,6 +42,7 @@ public class GameplayUI : MonoBehaviour {
 	[Header("RemotePlayer")]
 	public GameObject remotePlayerPanel;
 	public Text textRemoteUsername;
+	public Text textRemoteScore;
 
 	[Header("GameOver")] 
 	public GameObject newHighScoreText;
