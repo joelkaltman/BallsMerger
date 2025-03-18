@@ -11,6 +11,14 @@ public class UserManager
     
     public AuthManager.UserData UserData { get; private set; }
 
+    private UserManager()
+    {
+        UserData = new AuthManager.UserData()
+        {
+            username = "FAKE_USER",
+        };
+    }
+    
     public int Kills { get; private set; }
     public bool Initialized { get; private set; }
     public bool AimingAutomatic { get; private set; }

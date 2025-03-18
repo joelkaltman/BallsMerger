@@ -230,7 +230,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 507900780}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1c186be32f1b624fb9298801d68a1db, type: 3}
   m_Name: 
@@ -1797,7 +1797,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2051715109}
-  - component: {fileID: 2051715111}
   - component: {fileID: 2051715112}
   m_Layer: 0
   m_Name: UIScripts
@@ -1821,18 +1820,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1460304764}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2051715111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2051715107}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cbb51dc456cc3e4abddb2b49641a978, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2051715112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1845,6 +1832,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2a4c43b3ae5f9a42a4160dd6ac1fe8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawner: {fileID: 507900782}
   panelPauseMenu: {fileID: 1030360020}
   panelGame: {fileID: 1997700669}
   panelGameOver: {fileID: 1788363431}
@@ -2268,8 +2256,8 @@ Transform:
   m_GameObject: {fileID: 2681599800088311271}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.0305, y: -0.6441, z: 0}
-  m_LocalScale: {x: 3.061, y: 8.712, z: 0.5157631}
+  m_LocalPosition: {x: 4.0305, y: 0.7208, z: 0}
+  m_LocalScale: {x: 3.061, y: 11.441469, z: 0.5157631}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7671532983396387783}
@@ -2632,8 +2620,8 @@ Transform:
   m_GameObject: {fileID: 881647652176831428}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.0078, y: -0.6441, z: 0}
-  m_LocalScale: {x: 3.015711, y: 8.712, z: 0.5157631}
+  m_LocalPosition: {x: -4.0078, y: 0.7208, z: 0}
+  m_LocalScale: {x: 3.015711, y: 11.441469, z: 0.5157631}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7671532983396387783}
@@ -2823,6 +2811,41 @@ PrefabInstance:
         type: 3}
       propertyPath: powerUpManager
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3630449802255249773, guid: bfbb619b98bd654489e25b644ce0460d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3630449802255249773, guid: bfbb619b98bd654489e25b644ce0460d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3630449802255249773, guid: bfbb619b98bd654489e25b644ce0460d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2051715112}
+    - target: {fileID: 3630449802255249773, guid: bfbb619b98bd654489e25b644ce0460d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3630449802255249773, guid: bfbb619b98bd654489e25b644ce0460d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PauseGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 3630449802255249773, guid: bfbb619b98bd654489e25b644ce0460d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameplayUI, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3630449802255249773, guid: bfbb619b98bd654489e25b644ce0460d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 4999268658906250823, guid: bfbb619b98bd654489e25b644ce0460d,
         type: 3}

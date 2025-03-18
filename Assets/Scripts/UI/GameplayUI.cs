@@ -20,6 +20,8 @@ public class GameplayUI : MonoBehaviour {
 		MULTIPAYER
 	};
 
+	public BallsSpawner spawner;
+	
 	[Header("Panels")] 
 	public GameObject panelPauseMenu;
 	public GameObject panelGame;
@@ -27,7 +29,7 @@ public class GameplayUI : MonoBehaviour {
 	public GameObject panelOptions;
 	public GameObject panelMultiplayer;
 
-    [Header("UI")] 
+	[Header("UI")] 
     public GameObject topPanel;
     public Text playerName;
     public Text textScore;
@@ -129,12 +131,8 @@ public class GameplayUI : MonoBehaviour {
 	private void OnLocalPlayerReady(GameObject player)
 	{
 		playerStats = player.GetComponent<PlayerStats>();
-
 		playerStats.Score.OnValueChanged += RefreshScore;
-	
 		playerName.text = UserManager.Instance.UserData.username;
-		
-		RefreshScore (playerStats.Score.Value, playerStats.Score.Value);
 	}
 
 	private void OnRemotePlayerReady(GameObject player)
@@ -143,6 +141,7 @@ public class GameplayUI : MonoBehaviour {
 		var remotePlayerStats = player.GetComponent<PlayerStats>();
 		SetUsername(remotePlayerStats.Username.Value, remotePlayerStats.Username.Value);
 		remotePlayerStats.Username.OnValueChanged += SetUsername;
+		remotePlayerStats.Score.OnValueChanged += RefreshRemoteScore;
 	}
 
 	private void SetUsername(FixedString64Bytes old, FixedString64Bytes username)
@@ -198,6 +197,7 @@ public class GameplayUI : MonoBehaviour {
 	private void StartGame()
 	{
 		topPanel.SetActive(true);
+		spawner.enabled = true;
 		textJoinCode.gameObject.SetActive(false);
 	}
 
@@ -267,7 +267,12 @@ public class GameplayUI : MonoBehaviour {
 	
 	private void RefreshScore(int previousScore, int score)
 	{
-		textScore.text = playerStats.Score.Value.ToString();
+		textScore.text = score.ToString();
+	}
+	
+	private void RefreshRemoteScore(int previousScore, int score)
+	{
+		textRemoteScore.text = score.ToString();
 	}
 
 	private void GameOver(MultiplayerManager.GameOverReason reason)
@@ -279,15 +284,15 @@ public class GameplayUI : MonoBehaviour {
 	        case MultiplayerManager.GameOverReason.Disconnected:
 		        textGameOverReason.text = "You got disconnected";
 		        break;
-	        case MultiplayerManager.GameOverReason.PlayerDied:
-		        textGameOverReason.text = "You DIED!";
+	        case MultiplayerManager.GameOverReason.LocalPlayerLost:
+		        textGameOverReason.text = "You LOST!";
 		        break;
-	        case MultiplayerManager.GameOverReason.OtherPlayerDied:
-		        textGameOverReason.text = $"{remoteUsername ?? "Your partner"} has DIED!";
+	        case MultiplayerManager.GameOverReason.RemotePlayerLost:
+		        textGameOverReason.text = $"{remoteUsername ?? "Your partner"} LOST!";
 		        break;
         }
         
-		textGiantScore.text = "Killed " + UserManager.Instance.Kills + " enemies!";
+		textGiantScore.text = "Your score is " + UserManager.Instance.Kills + "!";
 
 
 		bool newMaxScore = UserManager.Instance.CheckNewHighScore();

@@ -15,8 +15,9 @@ public class MultiplayerManager : MonoBehaviour
     public enum GameOverReason
     {
         Disconnected,
-        PlayerDied,
-        OtherPlayerDied,
+        TimeFinished,
+        LocalPlayerLost,
+        RemotePlayerLost,
     }
     
     public static MultiplayerManager Instance;
@@ -238,12 +239,12 @@ public class MultiplayerManager : MonoBehaviour
 
     private bool CheckGameOver(out GameOverReason reason)
     {
-        var deadPlayer = Players.FirstOrDefault(x => x && x.GetComponent<PlayerStats>().IsDead);
-        if (deadPlayer != null)
+        var lostPlayer = Players.FirstOrDefault(x => x && x.GetComponent<PlayerStats>().Lost.Value);
+        if (lostPlayer != null)
         {
-            reason = deadPlayer.GetComponent<NetworkObject>().IsOwner ? 
-                GameOverReason.PlayerDied : 
-                GameOverReason.OtherPlayerDied;
+            reason = lostPlayer.GetComponent<NetworkObject>().IsOwner ? 
+                GameOverReason.LocalPlayerLost : 
+                GameOverReason.RemotePlayerLost;
 
             return true;
         }

@@ -107,6 +107,6 @@ public class BallsSpawner : MonoBehaviour
     private void EndGame()
     {
         var localStats = MultiplayerManager.Instance.GetLocalPlayerComponent<PlayerStats>();
-        localStats.IsDead = true;
+        localStats.Lost.Value = true;
     }
 }
