@@ -117,9 +117,9 @@ public class GameplayUI : MonoBehaviour {
 		var username = UserManager.Instance.UserData.username;
 		
 		new NativeShare()
-			.SetSubject("Another Shooting Game")
-			.SetText($"{username} has invited you to kill some monsters!")
-			.SetUrl($"https://asgame-6af5c.web.app?code={joinCode}")
+			.SetSubject("Balls Merger")
+			.SetText($"{username} has challenged you to a duel!")
+			.SetUrl($"https://ballsmerger.web.app?code={joinCode}")
 			.Share();
 	}
 	
@@ -292,7 +292,7 @@ public class GameplayUI : MonoBehaviour {
 		        break;
         }
         
-		textGiantScore.text = "Your score is " + UserManager.Instance.Kills + "!";
+		textGiantScore.text = "Your score is " + UserManager.Instance.Score + "!";
 
 
 		bool newMaxScore = UserManager.Instance.CheckNewHighScore();

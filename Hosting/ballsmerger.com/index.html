@@ -1,0 +1,22 @@
+
+<html>
+    <head>
+        <script>
+            function onLoad(){
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                const code = urlParams.get('code');
+
+                var urlLink = "unitydl://ballsmerger?"+code;
+                var fallbacklink = 'https://play.google.com/store/apps/details?id=com.BigBambu.BallsMerger';
+
+                window.setTimeout(function ()
+                {
+                    window.location.replace(fallbackLink); 
+                }, 3000);
+                window.location = urlLink;
+            }
+            window.onload = onLoad;
+        </script>
+    </head>
+</html>

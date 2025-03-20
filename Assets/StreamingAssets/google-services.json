@@ -1,22 +1,22 @@
 {
   "project_info": {
-    "project_number": "939379106710",
-    "firebase_url": "https://asgame-6af5c-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "asgame-6af5c",
-    "storage_bucket": "asgame-6af5c.appspot.com"
+    "project_number": "409200425711",
+    "firebase_url": "https://ballsmerger-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "ballsmerger",
+    "storage_bucket": "ballsmerger.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:939379106710:android:7b4e5e0eb129882bec73b7",
+        "mobilesdk_app_id": "1:409200425711:android:c7102cd234b4857eddb91a",
         "android_client_info": {
-          "package_name": "com.BigBambu.AnotherShootingGame"
+          "package_name": "com.BigBambu.BallsMerger"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyClh7Zajpcr6ZNSERFxkElPhWzWzBVR1OI"
+          "current_key": "AIzaSyAxq1HRVEuItc6qMwZeFhj0Iaw-JhbFwyI"
         }
       ],
       "services": {

@@ -73,7 +73,7 @@ public static class AuthManager
         return Result.Valid();
     }
 
-    public static async Task<Result> Register(string email, string password, string username, int caps, List<int> guns)
+    public static async Task<Result> Register(string email, string password, string username)
     {
         try
         {
@@ -88,7 +88,7 @@ public static class AuthManager
         if (User != null)
         {
             await UpdateUserProfile(username);
-            await SaveUserData(new UserData() { username = username, caps = caps, guns = guns });
+            await SaveUserData(new UserData() { username = username });
         }
 
         return Result.Valid();
@@ -113,18 +113,14 @@ public static class AuthManager
     public class UserData
     {
         public string username;
-        public int maxKills;
-        public int caps;
-        public List<int> guns = new ();
+        public int maxScore;
     }
     
     public static async Task<bool> SaveUserData(UserData userData)
     {
         bool result = true;
         result &= await WriteToDb("username", userData.username);
-        result &= await WriteToDb("kills", userData.maxKills);
-        result &= await WriteToDb("caps", userData.caps);
-        result &= await WriteToDb("guns", userData.guns);
+        result &= await WriteToDb("maxScore", userData.maxScore);
         return result;
     }
 
@@ -149,16 +145,14 @@ public static class AuthManager
     public static async Task<UserData> GetUserData()
     {
         var username = await ReadDb<string>("username");
-        var kills = await ReadDb<long>("kills");
+        var maxScore = await ReadDb<long>("maxScore");
         var caps = await ReadDb<long>("caps");
         var guns = await ReadDb<List<object>>("guns");
         
         return new UserData()
         {
             username = username,
-            maxKills = Convert.ToInt32(kills),
-            caps = Convert.ToInt32(caps),
-            guns = guns.Select(Convert.ToInt32).ToList()
+            maxScore = Convert.ToInt32(maxScore),
         };
     }
 
@@ -182,12 +176,12 @@ public static class AuthManager
     public struct UserRank
     {
         public string username;
-        public int maxKills;
+        public int maxScore;
 
-        public UserRank(object username, object kills)
+        public UserRank(object username, object maxScore)
         {
             this.username = username != null ? (string)username : default;
-            this.maxKills = kills != null ? Convert.ToInt32((long)kills) : default;
+            this.maxScore = maxScore != null ? Convert.ToInt32((long)maxScore) : default;
         }
     }
 
@@ -197,13 +191,13 @@ public static class AuthManager
         List<UserRank> userRanks = new();
         try
         {
-            var dataSnapshot = await dbReference.Child("users").OrderByChild("kills").GetValueAsync();
+            var dataSnapshot = await dbReference.Child("users").OrderByChild("maxScore").GetValueAsync();
             foreach (var data in dataSnapshot.Children.Reverse())
             {
                 var username = data.Child("username").Value;
-                var kills = data.Child("kills").Value;
+                var maxScore = data.Child("maxScore").Value;
             
-                userRanks.Add(new UserRank(username, kills));
+                userRanks.Add(new UserRank(username, maxScore));
             }
         }
         catch (Exception exception)
@@ -222,7 +216,7 @@ public static class AuthManager
             await GetScoreboard();
         }
 
-        int maxScore = lastRankingRetrieved.Max(x => x.maxKills);
-        return lastRankingRetrieved.Any(x => x.maxKills >= maxScore && x.username == username);
+        int maxScore = lastRankingRetrieved.Max(x => x.maxScore);
+        return lastRankingRetrieved.Any(x => x.maxScore >= maxScore && x.username == username);
     }
 }

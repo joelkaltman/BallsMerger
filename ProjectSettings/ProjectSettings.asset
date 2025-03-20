@@ -163,7 +163,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.BigBambu.AnotherShootingGame
+    Android: com.BigBambu.BallsMerger
     Standalone: com.bigbambu.anothershootinggame
   buildNumber:
     Standalone: 0

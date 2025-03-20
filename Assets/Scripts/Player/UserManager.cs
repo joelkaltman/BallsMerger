@@ -19,7 +19,7 @@ public class UserManager
         };
     }
     
-    public int Kills { get; private set; }
+    public int Score { get; private set; }
     public bool Initialized { get; private set; }
     public bool AimingAutomatic { get; private set; }
 
@@ -45,49 +45,31 @@ public class UserManager
         await AuthManager.SaveUserData(UserData);
     }
 
-    public async void SaveKills()
+    public async void SaveMaxScore()
     {
-        await AuthManager.WriteToDb("kills", UserData.maxKills);
-    }
-	
-    public async void SaveCaps()
-    {
-        await AuthManager.WriteToDb("caps", UserData.caps);
-    }
-	
-    public async void SaveGuns()
-    {
-        await AuthManager.WriteToDb("guns", UserData.guns);
+        await AuthManager.WriteToDb("maxScore", UserData.maxScore);
     }
     
-    public void AddCap()
+    public void SetScore(int score)
     {
-        UserData.caps++;
-        SaveCaps();
-        
-        OnCapCountChange?.Invoke ();
-    }
-    
-    public void SetKills(int score)
-    {
-        if (score < Kills)
+        if (score < Score)
             return;
         
-        Kills = score;
+        Score = score;
     }
 
-    public void ResetKills()
+    public void ResetScore()
     {
-        Kills = 0;
+        Score = 0;
     }
 
     public bool CheckNewHighScore()
     {
-        bool newHighScore = Kills > UserData.maxKills;
+        bool newHighScore = Score > UserData.maxScore;
         if (newHighScore)
         {
-            UserData.maxKills = Kills;
-            SaveKills();
+            UserData.maxScore = Score;
+            SaveMaxScore();
         }
 
         return newHighScore;

@@ -15,7 +15,7 @@ public class PlayerStats : NetworkBehaviour
 		if (IsOwner)
 		{
 			user = UserManager.Instance;
-			user.ResetKills();
+			user.ResetScore();
 
 			string username = user.UserData.username;
 			if (IsHost)
@@ -30,7 +30,7 @@ public class PlayerStats : NetworkBehaviour
 
 		MultiplayerManager.Instance.RegisterPlayer(gameObject);
 
-		Score.OnValueChanged += OnKill;
+		Score.OnValueChanged += OnScoreChanged;
 	}
 	
 	[ServerRpc]
@@ -42,11 +42,11 @@ public class PlayerStats : NetworkBehaviour
 		Username.Value = username;
 	}
 	
-	private void OnKill(int prevScore, int newScore)
+	private void OnScoreChanged(int prevScore, int newScore)
 	{
 		if (!IsOwner)
 			return;
 		
-		user.SetKills(Score.Value);
+		user.SetScore(Score.Value);
 	}
 }

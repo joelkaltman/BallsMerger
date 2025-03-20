@@ -24,10 +24,10 @@ public class Share : MonoBehaviour
 		// To avoid memory leaks
 		Destroy(ss);
 
-		var score = UserManager.Instance.Kills;
+		var score = UserManager.Instance.Score;
 		new NativeShare().AddFile(filePath)
 			.SetSubject("Another Shooting Game")
-			.SetText("I killed " + score + " monsters in ASG! Think you can beat me??")
+			.SetText($"I scored {UserManager.Instance.Score} in BallsMerger! Think you can beat me??")
 			//.SetUrl( "https://github.com/yasirkula/UnityNativeShare" )
 			//.SetCallback( ( result, shareTarget ) => Debug.Log( "Share result: " + result + ", selected app: " + shareTarget ) )
 			.Share();

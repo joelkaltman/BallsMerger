@@ -67,14 +67,14 @@ public class LoginUI : MonoBehaviour
             if(user.Length < 6 || user.Contains(" "))
                 continue;
             
-            var result = await AuthManager.Register(user + emailSufix, user, user, 100, new List<int> {0});
+            var result = await AuthManager.Register(user + emailSufix, user, user);
             
             if (!result.valid)
             {
                 Debug.LogError("Error: " + result.error);
                 return;
             }
-            await AuthManager.WriteToDb("kills", random.Next(5, 250));
+            await AuthManager.WriteToDb("maxScore", random.Next(5, 10000));
             //uthManager.Logout();
             
             Debug.Log("FINISHED " + user);
@@ -152,7 +152,7 @@ public class LoginUI : MonoBehaviour
     {
         await InitializeAuth();
         
-        var result = await AuthManager.Register(email, password, username, 100, new List<int> {0});
+        var result = await AuthManager.Register(email, password, username);
         
         if (!result.valid)
         {
