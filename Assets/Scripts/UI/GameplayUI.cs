@@ -101,6 +101,8 @@ public class GameplayUI : MonoBehaviour {
 	{
 		if (!MultiplayerManager.Instance.IsGameReady)
 			return;
+		
+		RefreshTimer();
 	}
 
 	private void OnHostStarted(string code)
@@ -275,6 +277,23 @@ public class GameplayUI : MonoBehaviour {
 		textRemoteScore.text = score.ToString();
 	}
 
+	void RefreshTimer()
+	{
+		var min = MultiplayerManager.Instance.Timer.Minutes.Value;
+		var sec = MultiplayerManager.Instance.Timer.Seconds.Value;
+		
+		string strMin = min.ToString ();
+		string strSec = sec.ToString ();
+		if(min < 10) {
+			strMin = "0" + min;
+		}
+		if(sec < 10) {
+			strSec = "0" + sec;
+		}
+		
+		this.textTime.text = strMin + ":" + strSec;
+	}
+
 	private void GameOver(MultiplayerManager.GameOverReason reason)
 	{
         ShowCanvas (PanelType.GAMEOVER);
@@ -289,6 +308,9 @@ public class GameplayUI : MonoBehaviour {
 		        break;
 	        case MultiplayerManager.GameOverReason.RemotePlayerLost:
 		        textGameOverReason.text = $"{remoteUsername ?? "Your partner"} LOST!";
+		        break;
+	        case MultiplayerManager.GameOverReason.TimeFinished:
+		        textGameOverReason.text = $"Time has run out!";
 		        break;
         }
         

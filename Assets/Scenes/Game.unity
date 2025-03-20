@@ -737,6 +737,8 @@ MonoBehaviour:
     type: 3}
   networkManagerMP: {fileID: 6749781597136248908, guid: adecc0e075522ad44922395814fc0c90,
     type: 3}
+  countDownTimer: {fileID: 5062122936414226892, guid: 70c81d6a27346aa40b32b8a1e2cb74a5,
+    type: 3}
   IsGameReady: 0
 --- !u!4 &1398059677
 Transform:
@@ -1833,6 +1835,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawner: {fileID: 507900782}
+  timer: {fileID: 0}
   panelPauseMenu: {fileID: 1030360020}
   panelGame: {fileID: 1997700669}
   panelGameOver: {fileID: 1788363431}

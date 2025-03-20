@@ -25,7 +25,7 @@ public class TransparentOnOverlap : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if (!MultiplayerManager.Instance.IsHostReady)
+		if (!MultiplayerManager.Instance.IsHostAndReady)
 			return;
 
 		var player = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();

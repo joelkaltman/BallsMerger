@@ -24,6 +24,9 @@ public class MultiplayerManager : MonoBehaviour
     
     public GameObject networkManagerSP;
     public GameObject networkManagerMP;
+
+    public GameObject countDownTimer;
+    public CountDownTimer Timer { get; private set; }
     
     private NetworkManager networkManager;
     private UnityTransport unityTransport;
@@ -37,7 +40,7 @@ public class MultiplayerManager : MonoBehaviour
     public event Action<GameObject> OnRemotePlayerReady;
 
     public bool IsHost => networkManager ? networkManager.IsHost : false;
-    public bool IsHostReady => IsGameReady && IsHost;
+    public bool IsHostAndReady => IsGameReady && IsHost;
     
     public List<GameObject> Players { get; private set; } = new();
     
@@ -59,6 +62,11 @@ public class MultiplayerManager : MonoBehaviour
         unityTransport = sp.GetComponent<UnityTransport>();
         networkManager.StartHost();
 
+        var timer = Instantiate(countDownTimer);
+        timer.GetComponent<NetworkObject>()?.Spawn();
+        Timer = timer.GetComponent<CountDownTimer>();
+        Timer.OnFinished += () => EndGame(GameOverReason.TimeFinished);
+        
         StartGame();
     }
     
@@ -129,6 +137,11 @@ public class MultiplayerManager : MonoBehaviour
             unityTransport.OnTransportEvent += TransportEvent;
             networkManager.StartHost();
 
+            var timer = Instantiate(countDownTimer);
+            timer.GetComponent<NetworkObject>()?.Spawn();
+            Timer = timer.GetComponent<CountDownTimer>();
+            Timer.OnFinished += () => EndGame(GameOverReason.TimeFinished);
+            
             return new ConnectionResult() { Result = true, JoinCode = joinCode };
         }
         catch (RelayServiceException e)
@@ -233,11 +246,11 @@ public class MultiplayerManager : MonoBehaviour
         if (!IsGameReady)
             return;
         
-        if(CheckGameOver(out var reason))
+        if(IsGameOver(out var reason))
             EndGame(reason);
     }
 
-    private bool CheckGameOver(out GameOverReason reason)
+    public bool IsGameOver(out GameOverReason reason)
     {
         var lostPlayer = Players.FirstOrDefault(x => x && x.GetComponent<PlayerStats>().Lost.Value);
         if (lostPlayer != null)
