@@ -30,7 +30,11 @@ public class GameplayUI : MonoBehaviour {
 	public GameObject panelMultiplayer;
 
 	[Header("UI")] 
+	public GameObject game;
     public GameObject topPanel;
+    public GameObject bottomPanel;
+    
+	public Button attackButton;
     public Text playerName;
     public Text textScore;
     public Text textTime;
@@ -50,6 +54,7 @@ public class GameplayUI : MonoBehaviour {
 	public GameObject newHighScoreText;
 	
 	private PlayerStats playerStats;
+	private PlayerStats remotePlayerStats;
 	
 	private float objetiveFade;
 	private float currentFade;
@@ -61,7 +66,7 @@ public class GameplayUI : MonoBehaviour {
 
 	private NetworkManager netManager;
 
-	private string remoteUsername;
+	private string RemoteUsername => remotePlayerStats.Username.Value.ToString() ?? "Your partner";
 
 	void Awake()
 	{
@@ -91,11 +96,12 @@ public class GameplayUI : MonoBehaviour {
 			ShowCanvas(PanelType.MULTIPAYER);
 			var mpUI = panelMultiplayer.GetComponent<MultiplayerUI>();
 			mpUI.OnHostStarted += OnHostStarted;
-			MultiplayerManager.Instance.OnLocalPlayerReady += OnClientStarted;
 		}
 		
+		game.SetActive(false);
 		remotePlayerPanel.SetActive(false);
-    }
+		attackButton.gameObject.SetActive(false);
+	}
 
 	void Update ()
 	{
@@ -107,12 +113,13 @@ public class GameplayUI : MonoBehaviour {
 
 	private void OnHostStarted(string code)
 	{
-		ShowCanvas(PanelType.GAME);
+		//ShowCanvas(PanelType.GAME);
 		topPanel.SetActive(false);
+		bottomPanel.SetActive(false);
 		textJoinCode.gameObject.SetActive(true);
 		textJoinCode.text = code;
 	}
-
+	
 	public void ShareCode()
 	{
 		var joinCode = textJoinCode.text;
@@ -125,31 +132,37 @@ public class GameplayUI : MonoBehaviour {
 			.Share();
 	}
 	
-	private void OnClientStarted(GameObject player)
-	{
-		ShowCanvas(PanelType.GAME);
-	}
-	
 	private void OnLocalPlayerReady(GameObject player)
 	{
 		playerStats = player.GetComponent<PlayerStats>();
 		playerStats.Score.OnValueChanged += RefreshScore;
 		playerName.text = UserManager.Instance.UserData.username;
+
+		if (GameData.Instance.isOnline)
+		{
+			playerStats.OnAttackReady += () => { attackButton.gameObject.SetActive(true); };
+			attackButton.onClick.AddListener(LocalPlayerAttack);
+		}
+	}
+
+	private void LocalPlayerAttack()
+	{
+		playerStats.AttackRpc();
+		attackButton.gameObject.SetActive(false);
 	}
 
 	private void OnRemotePlayerReady(GameObject player)
 	{
 		remotePlayerPanel.SetActive(true);
-		var remotePlayerStats = player.GetComponent<PlayerStats>();
-		SetUsername(remotePlayerStats.Username.Value, remotePlayerStats.Username.Value);
+		remotePlayerStats = player.GetComponent<PlayerStats>();
+		SetUsername(RemoteUsername, RemoteUsername);
 		remotePlayerStats.Username.OnValueChanged += SetUsername;
 		remotePlayerStats.Score.OnValueChanged += RefreshRemoteScore;
 	}
 
 	private void SetUsername(FixedString64Bytes old, FixedString64Bytes username)
 	{
-		remoteUsername = username.ToString();
-		textRemoteUsername.text = remoteUsername;
+		textRemoteUsername.text = RemoteUsername;
 	}
 	
 	private void ShowCanvas(PanelType type)
@@ -198,7 +211,10 @@ public class GameplayUI : MonoBehaviour {
 
 	private void StartGame()
 	{
+		ShowCanvas(PanelType.GAME);
 		topPanel.SetActive(true);
+		bottomPanel.SetActive(true);
+		game.SetActive(true);
 		spawner.enabled = true;
 		textJoinCode.gameObject.SetActive(false);
 	}
@@ -279,6 +295,18 @@ public class GameplayUI : MonoBehaviour {
 
 	void RefreshTimer()
 	{
+		if (!GameData.Instance.isOnline)
+		{
+			textTime.transform.parent.gameObject.SetActive(false);
+			return;
+		}
+
+		if (MultiplayerManager.Instance.Timer == null)
+		{
+			Debug.LogError("Timer not initialized for multiplayer.");
+			return;
+		}
+		
 		var min = MultiplayerManager.Instance.Timer.Minutes.Value;
 		var sec = MultiplayerManager.Instance.Timer.Seconds.Value;
 		
@@ -294,6 +322,11 @@ public class GameplayUI : MonoBehaviour {
 		this.textTime.text = strMin + ":" + strSec;
 	}
 
+	private void AttackRemotePlayer()
+	{
+		
+	}
+
 	private void GameOver(MultiplayerManager.GameOverReason reason)
 	{
         ShowCanvas (PanelType.GAMEOVER);
@@ -307,10 +340,11 @@ public class GameplayUI : MonoBehaviour {
 		        textGameOverReason.text = "You LOST!";
 		        break;
 	        case MultiplayerManager.GameOverReason.RemotePlayerLost:
-		        textGameOverReason.text = $"{remoteUsername ?? "Your partner"} LOST!";
+		        textGameOverReason.text = $"{RemoteUsername} LOST!";
 		        break;
 	        case MultiplayerManager.GameOverReason.TimeFinished:
-		        textGameOverReason.text = $"Time has run out!";
+		        var winner = remotePlayerStats != null && remotePlayerStats.Score.Value > playerStats.Score.Value ? $"{RemoteUsername}" : "You";
+		        textGameOverReason.text = $"Time has run out! {winner} WON!";
 		        break;
         }
         

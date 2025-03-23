@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class BallsSpawner : MonoBehaviour
 
     private BallCollision dropBall;
     private List<CollisionData> collisions = new();
+    private BallCollision[] balls => GetComponentsInChildren<BallCollision>();
     
 #if !PLATFORM_ANDROID
     //private bool InputDown => Input.GetMouseButton(0);
@@ -30,6 +32,8 @@ public class BallsSpawner : MonoBehaviour
     {
         initPos = guide.transform.position;
         limitX = limit.transform.localScale.x * 0.5f;
+        PlayerStats.OnAttacked -= PlayerAttacked;
+        PlayerStats.OnAttacked += PlayerAttacked;
         CreateDropBall(initPos);
     }
 
@@ -102,11 +106,29 @@ public class BallsSpawner : MonoBehaviour
                 CreateBall(ballData, spawnPos).Drop();
         }
         collisions.Clear();
+        
     }
 
     private void EndGame()
     {
         var localStats = MultiplayerManager.Instance.GetLocalPlayerComponent<PlayerStats>();
         localStats.Lost.Value = true;
+    }
+
+    private async void PlayerAttacked()
+    {
+        float acumTime = 0;
+        while (acumTime < 10f)
+        {
+            acumTime += Time.deltaTime;
+            
+            foreach (var ball in balls)
+                ball.CurrentColor = Color.white;
+
+            await Task.Yield();
+        }
+        
+        foreach (var ball in balls)
+            ball.RestoreColor();
     }
 }

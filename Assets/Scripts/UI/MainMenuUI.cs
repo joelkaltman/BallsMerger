@@ -24,8 +24,11 @@ public class MainMenuUI : MonoBehaviour {
 	
 	public Button buttonSinglePlayer;
 	public Button buttonMultiPlayer;
+	public Button buttonRanking;
+	public Button buttonSound;
+	public Button buttonLogOut;
+	
 	public Text textUsername;
-	public List<Image> buttonsSound;
 	public Sprite soundOn;
 	public Sprite soundOff;
 	
@@ -38,23 +41,19 @@ public class MainMenuUI : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	async void Start () 
+	void Start () 
 	{
 		Time.timeScale = 1;
-		
-        if(!UserManager.Instance.Initialized)
-            await DefaultUserFallback();
         
         ShowCanvas (PanelType.MAINMENU);
         
         OnUserInitialized();
-    }
-
-    private async Task DefaultUserFallback()
-    {
-        await AuthManager.Initialize();
-        await AuthManager.Login("joelkalt@asg.com", "asdasd");
-        await UserManager.Instance.Initialize();
+        
+        buttonSinglePlayer.onClick.AddListener(StartSinglePlayer);
+        buttonMultiPlayer.onClick.AddListener(StartMultiplayer);
+        buttonRanking.onClick.AddListener(GoToRanking);
+        buttonSound.onClick.AddListener(MuteGame);
+        buttonLogOut.onClick.AddListener(LogOut);
     }
     
     private void OnUserInitialized()
@@ -97,28 +96,29 @@ public class MainMenuUI : MonoBehaviour {
 		currentPanel = type;
 	}
 
-	public void StartGame()
+	public void StartSinglePlayer()
 	{
 		GameData.Instance.isOnline = false;
-		SceneManager.LoadScene ("Game");
+		SceneManager.LoadScene("Game");
+	}
+
+	public void StartMultiplayer()
+	{
+		GameData.Instance.isOnline = true;
+		SceneManager.LoadScene("Game");
 	}
 	
 	public void LogOut()
 	{
 		UserManager.Instance.SavePlayerPrefs("", "");
 		AuthManager.Logout();
-		SceneManager.LoadScene ("Login");
+		SceneManager.LoadScene("Login");
 	}
 		
 	public void GoToMainMenu()
 	{
 		Time.timeScale = 1;
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
-	}
-
-	public void GoToStore()
-	{
-		SceneManager.LoadScene ("Store");
 	}
 
 	public void GoToOptions()
@@ -130,26 +130,15 @@ public class MainMenuUI : MonoBehaviour {
     {
         SceneManager.LoadScene("Ranking");
     }
-
-	public void GoToMultiplayer()
-	{
-		GameData.Instance.isOnline = true;
-		SceneManager.LoadScene("Game");
-	}
 	
 	public void GoToLastPanel()
 	{
         ShowCanvas (lastPanel);
 	}
 
-	public void MuteGame(){
-		bool isMute = MusicManager.Instance.Mute ();
-		for (int i = 0; i < buttonsSound.Count; i++) {
-			if (isMute) {
-				buttonsSound [i].sprite = soundOff;
-			} else {
-				buttonsSound [i].sprite = soundOn;
-			}
-		}
+	public void MuteGame()
+	{
+		bool isMute = MusicManager.Instance.Mute();
+		buttonSound.gameObject.GetComponent<Image>().sprite = isMute ? soundOff : soundOn;
 	}
 }

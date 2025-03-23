@@ -67,7 +67,7 @@ public class MultiplayerManager : MonoBehaviour
         Timer = timer.GetComponent<CountDownTimer>();
         Timer.OnFinished += () => EndGame(GameOverReason.TimeFinished);
         
-        StartGame();
+        StartGame(false);
     }
     
     public async void InitializeMultiplayer()
@@ -136,11 +136,6 @@ public class MultiplayerManager : MonoBehaviour
             unityTransport.SetRelayServerData(relayServerData);
             unityTransport.OnTransportEvent += TransportEvent;
             networkManager.StartHost();
-
-            var timer = Instantiate(countDownTimer);
-            timer.GetComponent<NetworkObject>()?.Spawn();
-            Timer = timer.GetComponent<CountDownTimer>();
-            Timer.OnFinished += () => EndGame(GameOverReason.TimeFinished);
             
             return new ConnectionResult() { Result = true, JoinCode = joinCode };
         }
@@ -173,7 +168,7 @@ public class MultiplayerManager : MonoBehaviour
     {
         if (eventType == NetworkEvent.Connect)
         {
-            StartGame();
+            StartGame(true);
         }
         else if (eventType == NetworkEvent.Disconnect)
         {
@@ -194,6 +189,12 @@ public class MultiplayerManager : MonoBehaviour
         {
             OnRemotePlayerReady?.Invoke(player);
         }
+    }
+
+    public void RegisterTimer(CountDownTimer timer)
+    {
+        Timer = timer;
+        timer.OnFinished += () => EndGame(GameOverReason.TimeFinished);
     }
 
     private async Task WaitForGameReady()
@@ -228,15 +229,16 @@ public class MultiplayerManager : MonoBehaviour
         return Players[rand];
     }
 
-    public GameObject GetPlayerCloserTo(Vector3 pos)
-    {
-        return Players.Where(x => x != null).OrderBy(x => Vector3.Distance(x.transform.position, pos)).FirstOrDefault();
-    }
-    
-    private async void StartGame()
+    private async void StartGame(bool mp)
     {
         await WaitForGameReady();
-        
+
+        if (mp && IsHost)
+        {
+            var timer = Instantiate(countDownTimer);
+            timer.GetComponent<NetworkObject>()?.Spawn();
+        }
+
         IsGameReady = true;
         OnGameReady?.Invoke();
     }

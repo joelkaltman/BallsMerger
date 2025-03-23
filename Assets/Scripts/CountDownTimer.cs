@@ -17,8 +17,13 @@ public class CountDownTimer : NetworkBehaviour
 
     private void Start()
     {
-        Seconds.Value = secondsDuration;
-        Minutes.Value = minutesDuration;
+        if (MultiplayerManager.Instance.IsHost)
+        {
+            Seconds.Value = secondsDuration;
+            Minutes.Value = minutesDuration;
+        }
+
+        MultiplayerManager.Instance.RegisterTimer(this);
     }
 
     void Update()

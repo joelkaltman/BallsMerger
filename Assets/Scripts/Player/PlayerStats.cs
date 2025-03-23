@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using System;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,6 +10,10 @@ public class PlayerStats : NetworkBehaviour
 	[HideInInspector] public NetworkVariable<bool> Lost = new(false, writePerm:NetworkVariableWritePermission.Owner);
 
     private UserManager user;
+
+    private int lastScoreAttack;
+    public event Action OnAttackReady;
+    public static event Action OnAttacked;
 
 	private void Start()
 	{
@@ -48,5 +53,17 @@ public class PlayerStats : NetworkBehaviour
 			return;
 		
 		user.SetScore(Score.Value);
+
+		if (Score.Value - lastScoreAttack > 1000)
+		{
+			lastScoreAttack = Score.Value;
+			OnAttackReady?.Invoke();
+		}
+	}
+
+	[Rpc(SendTo.NotMe)]
+	public void AttackRpc()
+	{
+		OnAttacked?.Invoke();
 	}
 }

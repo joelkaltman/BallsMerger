@@ -70,5 +70,5 @@ MonoBehaviour:
     m_InternalValue: 0
   Minutes:
     m_InternalValue: 0
-  secondsDuration: 4
-  minutesDuration: 0
+  secondsDuration: 0
+  minutesDuration: 5

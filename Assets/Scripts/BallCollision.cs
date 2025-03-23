@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -38,6 +39,8 @@ public class BallCollision : MonoBehaviour
     private float topY;
     private float timerLose;
     private bool dropped;
+
+    public Color CurrentColor;
     
     public void Init(BallData data, float topY)
     {
@@ -52,9 +55,10 @@ public class BallCollision : MonoBehaviour
         collider.enabled = false;
         
         transform.localScale = Vector3.one * data.size;
+        CurrentColor = data.color;
         
         ResetTimer();
-        SetColor(data.color);
+        SetColor(CurrentColor);
     }
 
     public void Drop()
@@ -78,7 +82,7 @@ public class BallCollision : MonoBehaviour
             timerLose -= Time.deltaTime;
 
             var coef = (INITIAL_TIMER - timerLose) / INITIAL_TIMER;
-            var initialColor = new Vector3(data.color.r, data.color.g, data.color.b);
+            var initialColor = new Vector3(CurrentColor.r, CurrentColor.g, CurrentColor.b);
             var color = math.lerp(initialColor, new Vector3(1, 0, 0), coef);
             SetColor(new Color(color.x, color.y, color.z));
             
@@ -88,7 +92,7 @@ public class BallCollision : MonoBehaviour
         else
         {
             ResetTimer();
-            SetColor(data.color);
+            SetColor(CurrentColor);
         }
         
     }
@@ -112,5 +116,10 @@ public class BallCollision : MonoBehaviour
         };
         
         OnCollision?.Invoke(colData);
+    }
+
+    public void RestoreColor()
+    {
+        CurrentColor = data.color;
     }
 }
